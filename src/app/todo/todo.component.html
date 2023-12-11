@@ -1,0 +1,95 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3" style="background: darkgreen; height: 93vh;">
+      <div>
+        <mat-card class="mt-3 p-3">
+          <form [formGroup]="todoTask" (ngSubmit)="addTask()">
+            <mat-form-field appearance="outline">
+              <mat-label>Add Task</mat-label>
+              <input class="w-100" matInput placeholder="Task Name" formControlName="task_name">
+              <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+              <!-- <small class="text-red"
+                *ngIf="todoTask.get('task_name')?.errors?.[required] && todoTask.get('task_name')?.errors?.[touched]">
+                Task is required</small> -->
+              <mat-error *ngIf="todoTask.get('task_name')?.errors?.['required'] && todoTask.get('task_name')?.touched"
+                class="bg-red">
+                Task Name is required</mat-error>
+            </mat-form-field>
+            <div style=" text-align: center">
+              <button *ngIf="!editStatus; else updateBlock" type="submit" [disabled]="!todoTask.valid" mat-raised-button
+                class="bg-primary text-white mt-4">Add Task</button>
+              <span type="reset" class="resetFrom" (click)="resetTodoTask()">
+                <mat-icon>rotate_left</mat-icon></span>
+              <ng-template #updateBlock>
+                <button type="button" [disabled]="!todoTask.valid" mat-raised-button (click)="updateTask()"
+                  class="bg-primary text-white mt-4">Update Task</button>
+              </ng-template>
+
+            </div>
+          </form>
+        </mat-card>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div cdkDropListGroup>
+        <div class="row">
+          <div class="col-md-4">
+            <!-- Todo List -->
+            <div class="example-container">
+              <h2 class="todoTitle">TO DO <span *ngIf="tasks.length > 0">{{- tasks.length}}</span></h2>
+              <div cdkDropList [cdkDropListData]="tasks" class="example-list" (cdkDropListDropped)="drop($event)">
+                <div *ngIf="tasks.length == 0" class="taskPlacholder">... No Task Added</div>
+                @for (item of tasks; track item; let i = $index ) {
+                <div class="example-box" cdkDrag>{{item.description}}
+                  <div class="box">
+                    <button (click)="deleteTask(i)" mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+                    <button mat-icon-button color="primary"
+                      (click)="editIPTask(item,i)"><mat-icon>edit</mat-icon></button>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <!-- In progress  -->
+            <div class="example-container">
+              <h2 class="todoTitle">IN PROGRESS <span *ngIf="inProgress.length > 0">{{- inProgress.length}}</span></h2>
+
+              <div cdkDropList [cdkDropListData]="inProgress" class="example-list" (cdkDropListDropped)="drop($event)">
+                <div *ngIf="inProgress.length == 0" class="taskPlacholder">... No In Progress Task</div>
+                @for (item of inProgress; track item; let i = $index) {
+                <div class="example-box" cdkDrag>{{item.description}}
+                  <div class="box">
+                    <button (click)="deleteIPTask(i)" mat-icon-button color="warn"><mat-icon>delete</mat-icon></button>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <!-- Completed -->
+            <div class="example-container">
+              <h2 class="todoTitle">COMPLETED <span *ngIf="completed.length > 0">{{- completed.length}}</span></h2>
+
+              <div cdkDropList [cdkDropListData]="completed" class="example-list" (cdkDropListDropped)="drop($event)">
+                <div *ngIf="completed.length == 0" class="taskPlacholder">... No Completed Task</div>
+                @for (item of completed; track item; let i = $index;) {
+                <div class="example-box" cdkDrag>{{item.description}}
+                  <div class="box">
+                    <button (click)="deleteCompletedTask(i)" mat-icon-button
+                      color="warn"><mat-icon>delete</mat-icon></button>
+                    <button mat-icon-button style="color: rgb(47, 196, 47);"><mat-icon>check_circle</mat-icon></button>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
